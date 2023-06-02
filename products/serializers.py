@@ -27,6 +27,7 @@ class ProductSerializer(serializers.ModelSerializer):
             name=validated_data['name'],
             category=category,
             price=validated_data['price'],
+            quantity=validated_data['quantity'],
             owner=owner
         )
         return new_product
@@ -43,4 +44,9 @@ class ProductSerializer(serializers.ModelSerializer):
     def validate_price(self, value):
         if value <= 0:
             raise serializers.ValidationError("Price must be greater than zero.")
+        return value
+
+    def validate_quantity(self, value):
+        if value <= 0:
+            raise serializers.ValidationError('Quantity must be greater than zero.')
         return value

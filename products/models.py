@@ -1,11 +1,8 @@
 from django.db import models
-from django.db.models.signals import pre_delete
-from django.dispatch import receiver
-
-from users.models import Seller
 
 
 class Category(models.Model):
+    parent = models.ForeignKey(to='self', on_delete=models.PROTECT, null=True)
     name = models.CharField(max_length=40, unique=True)
     description = models.TextField()
 
@@ -21,8 +18,9 @@ class Product(models.Model):
     name = models.CharField(max_length=50)
     category = models.ForeignKey(to=Category, on_delete=models.PROTECT)
     price = models.DecimalField(max_digits=10, decimal_places=2)
+    quantity = models.PositiveIntegerField(default=1)
     created_at = models.DateTimeField(auto_now_add=True)
-    owner = models.ForeignKey(to=Seller, on_delete=models.PROTECT)
+    owner = models.ForeignKey(to='users.Seller', on_delete=models.PROTECT)
     is_active = models.BooleanField(default=True)
 
     class Meta:
@@ -33,15 +31,11 @@ class Product(models.Model):
         return f"ID : {self.id} | Product: {self.name} | Category: {str(self.category)} | Price: {self.price} $"
 
 
-@receiver(signal=pre_delete, sender=Seller)
-def set_product_inactive(sender, instance, **kwargs):
-    instance.is_active = False
-
-
 class ProductDetail(models.Model):
+    # category = models.OneToOneField(to=Category, on_delete=models.PROTECT)
     product = models.OneToOneField(to=Product, on_delete=models.PROTECT)
     description = models.TextField()
-    quantity = models.PositiveIntegerField(default=0)
+    # quantity = models.PositiveIntegerField(default=0)
     resolution = models.CharField(max_length=15, null=True, blank=True)
     processor = models.CharField(max_length=40, null=True, blank=True)
     storage = models.CharField(max_length=50, null=True, blank=True)

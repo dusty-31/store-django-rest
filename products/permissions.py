@@ -7,7 +7,7 @@ class IsAdminOrSellerReadOnly(permissions.BasePermission):
             return True
 
         if request.user.is_authenticated:
-            if request.user.is_staff:
+            if request.user.is_staff or request.user.is_superuser:
                 return True
 
             return request.user.role == 'SELLER'
@@ -17,7 +17,7 @@ class IsAdminOrSellerReadOnly(permissions.BasePermission):
             return True
 
         if request.user.is_authenticated:
-            if request.user.is_staff:
+            if request.user.is_staff or request.user.is_superuser:
                 return True
 
             return request.user == obj.owner
@@ -28,4 +28,4 @@ class IsAdminOrReadOnly(permissions.BasePermission):
         if request.method in permissions.SAFE_METHODS:
             return True
 
-        return bool(request.user.is_staff)
+        return request.user.is_staff or request.user.is_superuser
