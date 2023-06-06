@@ -1,7 +1,7 @@
 import requests
 from urllib.parse import urljoin
 from decimal import Decimal
-from random import uniform
+from random import uniform, randint
 import json
 
 
@@ -9,6 +9,8 @@ class StoreFiller:
     hostname = 'http://localhost:8000/api/v1/'
     MIN_VALUE_FOR_PRICE = 1.00
     MAX_VALUE_FOR_PRICE = 50000.00
+    MIN_QUANTITY = 10
+    MAX_QUANTITY = 100
 
     def __init__(self, username: str, password: str, session: requests.Session = None):
         self.session = session or requests.Session()
@@ -24,12 +26,15 @@ class StoreFiller:
     def create_category(self, name: str, description: str):
         self.post(url=urljoin(self.hostname, 'categories'), data={'name': name, 'description': description})
 
-    def create_product(self, name: str, category: str, price=None) -> None:
+    def create_product(self, name: str, category: str, price=None, quantity=None) -> None:
         if price is None:
             price = self.__random_price()
+        if quantity is None:
+            quantity = self.__random_quantity()
         self.post(url=urljoin(self.hostname, 'products'), data={'name': name,
                                                                 'category': category,
                                                                 'price': price,
+                                                                'quantity': quantity,
                                                                 'owner': self.username
                                                                 })
 
@@ -51,6 +56,10 @@ class StoreFiller:
     @classmethod
     def __random_price(cls) -> Decimal:
         return Decimal(uniform(cls.MIN_VALUE_FOR_PRICE, cls.MAX_VALUE_FOR_PRICE)).quantize(Decimal('0.01'))
+
+    @classmethod
+    def __random_quantity(cls) -> int:
+        return randint(cls.MIN_QUANTITY, cls.MAX_QUANTITY)
 
 
 def main():
