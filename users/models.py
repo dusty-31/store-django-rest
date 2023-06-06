@@ -47,13 +47,13 @@ class CustomerProfile(models.Model):
 
 @receiver(signal=post_save, sender=Customer)
 def create_user_profile(sender, instance, created, **kwargs):
-    if created and instance.role == 'CUSTOMER':
+    if created and instance.role == User.Role.CUSTOMER.name:
         CustomerProfile.objects.create(user=instance)
 
 
 @receiver(signal=post_save, sender=Customer)
 def create_basket(sender, instance, created, **kwargs):
-    if created and instance.role == 'CUSTOMER':
+    if created and instance.role == User.Role.CUSTOMER.name:
         Basket.objects.create(owner=instance)
 
 
@@ -78,5 +78,5 @@ class SellerProfile(models.Model):
 
 @receiver(signal=post_save, sender=Seller)
 def create_user_profile(sender, instance, created, **kwargs):
-    if created and instance.role == 'SELLER':
+    if created and instance.role == User.Role.SELLER.name:
         SellerProfile.objects.create(user=instance)
