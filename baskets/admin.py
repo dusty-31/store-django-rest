@@ -1,3 +1,13 @@
 from django.contrib import admin
 
-# Register your models here.
+from .models import Basket, BasketLine
+
+
+@admin.register(Basket)
+class BasketAdmin(admin.ModelAdmin):
+    pass
+
+
+@admin.register(BasketLine)
+class BasketLineAdmin(admin.ModelAdmin):
+    pass

@@ -4,6 +4,8 @@ from django.db.models.signals import post_save
 from django.contrib.auth.models import AbstractUser
 from django.dispatch import receiver
 
+from baskets.models import Basket
+
 
 class User(AbstractUser):
     class Role(models.TextChoices):
@@ -47,6 +49,12 @@ class CustomerProfile(models.Model):
 def create_user_profile(sender, instance, created, **kwargs):
     if created and instance.role == 'CUSTOMER':
         CustomerProfile.objects.create(user=instance)
+
+
+@receiver(signal=post_save, sender=Customer)
+def create_basket(sender, instance, created, **kwargs):
+    if created and instance.role == 'CUSTOMER':
+        Basket.objects.create(owner=instance)
 
 
 class SellerManager(BaseUserManager):
