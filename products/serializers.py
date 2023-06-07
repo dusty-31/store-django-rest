@@ -17,7 +17,7 @@ class ProductSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Product
-        fields = '__all__'
+        exclude = ['created_at', ]
 
     def create(self, validated_data):
         category = Category.objects.get(name=validated_data['category']['name'])

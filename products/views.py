@@ -22,14 +22,14 @@ class CategoryAPIView(APIView):
             category = get_object_or_404(klass=Category, pk=pk)
             serializer = CategorySerializer(category)
             response_key = 'category'
-        return Response({response_key: serializer.data})
+        return Response({response_key: serializer.data}, status=status.HTTP_200_OK)
 
     def post(self, request, *args, **kwargs):
         serializer = CategorySerializer(data=request.data)
         if serializer.is_valid():
             serializer.save()
-            return Response({'new_category': serializer.data})
-        return Response({'error': "406"}, status=status.HTTP_406_NOT_ACCEPTABLE)
+            return Response({'new_category': serializer.data}, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_406_NOT_ACCEPTABLE)
 
 
 class ProductAPIView(APIView):
@@ -46,23 +46,28 @@ class ProductAPIView(APIView):
             serializer = ProductSerializer(product)
             response_key = 'product'
 
-        return Response({response_key: serializer.data})
+        return Response({response_key: serializer.data}, status=status.HTTP_200_OK)
 
     def post(self, request, *args, **kwargs):
-        serializer = ProductSerializer(data=request.data)
+        if not request.data.get('owner', None):
+            data = request.data.copy()
+            data['owner'] = request.user.username
+        else:
+            data = request.data
+        serializer = ProductSerializer(data=data)
         if serializer.is_valid():
             serializer.save()
-            return Response({'new_product': serializer.data})
+            return Response({'new_product': serializer.data}, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_406_NOT_ACCEPTABLE)
 
     def put(self, request, *args, **kwargs):
         pk = kwargs.get('pk', None)
         if not pk:
-            return Response({'error': 'Method PUT not allowed.'})
+            return Response({'error': 'Method PUT not allowed.'}, status=status.HTTP_405_METHOD_NOT_ALLOWED)
         instance = get_object_or_404(klass=Product, pk=pk)
         self.check_object_permissions(request=request, obj=instance)
         serializer = ProductSerializer(data=request.data, instance=instance)
         if serializer.is_valid():
             serializer.save()
-            return Response({'updated_product': serializer.data})
+            return Response({'updated_product': serializer.data}, status=status.HTTP_200_OK)
         return Response(serializer.errors, status=status.HTTP_406_NOT_ACCEPTABLE)
