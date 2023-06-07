@@ -1,0 +1,45 @@
+{
+    "categories": [
+        "Laptops",
+        "Keyboards",
+        "Chairs",
+        "Mice"
+    ],
+    "products": {
+        "Laptops": [
+            "MacBook Pro",
+            "Dell XPS 13",
+            "HP Spectre x360",
+            "Lenovo ThinkPad X1 Carbon",
+            "Asus ROG Zephyrus G14"
+        ],
+        "Keyboards": [
+            "iPhone 13",
+            "Samsung Galaxy S21",
+            "Google Pixel 6",
+            "OnePlus 9 Pro",
+            "Xiaomi Mi 11"
+        ],
+        "Phones": [
+            "iPhone 13",
+            "Samsung Galaxy S21",
+            "Google Pixel 6",
+            "OnePlus 9 Pro",
+            "Xiaomi Mi 11"
+        ],
+        "Chairs": [
+            "Herman Miller Aeron",
+            "Steelcase Gesture",
+            "Secretlab Omega",
+            "Humanscale Freedom",
+            "IKEA Markus"
+        ],
+        "Mice": [
+            "Logitech MX Master 3",
+            "Razer DeathAdder V2",
+            "SteelSeries Rival 600",
+            "Corsair Dark Core RGB Pro",
+            "Microsoft Surface Precision Mouse"
+        ]
+    }
+}
