@@ -34,19 +34,6 @@ class BasketAPIView(APIView):
             return Response({'new_basket': serializer.data})
         return Response(serializer.errors, status=status.HTTP_406_NOT_ACCEPTABLE)
 
-    def put(self, request, *args, **kwargs):
-        pk = kwargs.get('pk', None)
-        if not pk:
-            return Response({'error': 'Method PUT not allowed'})
-        instance = get_object_or_404(klass=Basket, pk=pk)
-        if instance.status == Basket.Status.SUBMITTED.name:
-            return Response({'error': 'You cannot change a basket that has been submitted.'})
-        serializer = BasketSerializer(data=request.data, instance=instance)
-        if serializer.is_valid():
-            serializer.save()
-            return Response({'updated_basket': serializer.data})
-        return Response(serializer.errors, status=status.HTTP_406_NOT_ACCEPTABLE)
-
 
 class BasketLineAPIView(APIView):
     def post(self, request, *args, **kwargs):
@@ -63,8 +50,8 @@ class BasketLineAPIView(APIView):
                 return Response({'error': 'Transferred quantity exceeds the quantity in the warehouse'},
                                 status=status.HTTP_403_FORBIDDEN)
 
-            existing_basket_line = BasketLine.objects.filter(basket=request.data['basket'],
-                                                             product=request.data['product']).first()
+            existing_basket_line = BasketLine.objects.get(basket=request.data['basket'],
+                                                          product=request.data['product'])
             if existing_basket_line:
                 new_quantity = existing_basket_line.quantity + int(request.data['quantity'])
                 if product.quantity < new_quantity:

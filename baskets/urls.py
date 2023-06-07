@@ -9,5 +9,5 @@ urlpatterns = [
     path('', views.BasketAPIView.as_view()),
     path('<int:pk>', views.BasketAPIView.as_view()),
     path('add', views.BasketLineAPIView.as_view()),
-    path('update/<int:pk>', views.BasketLineAPIView.as_view()),
+    path('line/<int:pk>', views.BasketLineAPIView.as_view()),
 ]

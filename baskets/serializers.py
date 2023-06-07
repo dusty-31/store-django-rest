@@ -29,10 +29,11 @@ class BasketLineSerializer(serializers.ModelSerializer):
         if validated_data.get('quantity'):
             if validated_data.get('quantity') >= instance.quantity:
                 instance.delete()
+                return None
             else:
                 instance.quantity -= validated_data.get('quantity')
                 instance.save()
-        return instance
+                return instance
 
 
 class BasketSerializer(serializers.ModelSerializer):
